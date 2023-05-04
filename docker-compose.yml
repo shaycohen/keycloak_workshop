@@ -1,0 +1,44 @@
+version: '3'
+volumes:
+  node_modules:
+      driver: local
+  postgres_data:
+      driver: local
+
+services:
+  webservice:
+      image: node
+      ports:
+        - 3001:3001
+      volumes: 
+        - ./webservice/:/app/
+        - node_modules:/app/node_modules
+      command: sh -c 'cd /app; npm i; npm run start'
+  postgres:
+      image: postgres
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: password
+  keycloak:
+      image: quay.io/keycloak/keycloak:legacy
+      environment:
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_SCHEMA: public
+        DB_PASSWORD: password
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: Pa55w0rd
+        IMPORT_FORCE: false
+        IMPORT_STATE: true
+        #JDBC_PARAMS: "ssl=true"
+      ports:
+        - 8080:8080
+      volumes: 
+        - ./standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
+      depends_on:
+        - postgres
