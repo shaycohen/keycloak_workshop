@@ -10,11 +10,15 @@ services:
       image: 389ds/dirsrv:latest
       volumes: 
         - ./dirsrv_init.sh:/dirsrv_init.sh
+      profiles: [ldap]
   pyclient:
       image: python:latest
       volumes: 
         - ./client.py:/client.py
       command: sh -c 'pip install keycloak-client; python client.py'
+      stdin_open: true
+      tty: true
+      profiles: [python, clients]
   webservice:
       image: node
       ports:
@@ -23,6 +27,7 @@ services:
         - ./webservice/:/app/
         - node_modules:/app/node_modules
       command: sh -c 'cd /app; npm i; npm run start'
+      profiles: [js, clients]
   postgres:
       image: postgres
       volumes:
