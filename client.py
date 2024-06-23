@@ -1,7 +1,7 @@
 from keycloak import KeycloakOpenID
 
 # Configure client
-keycloak_openid = KeycloakOpenID(server_url="http://localhost:8080/auth/",
+keycloak_openid = KeycloakOpenID(server_url="http://keycloak:8080/auth/",
                                  client_id="app-html5",
                                  realm_name="quickstart",
                                  client_secret_key="secret")

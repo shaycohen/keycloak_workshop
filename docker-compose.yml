@@ -6,6 +6,15 @@ volumes:
       driver: local
 
 services:
+  dirsrv:
+      image: 389ds/dirsrv:latest
+      volumes: 
+        - ./dirsrv_init.sh:/dirsrv_init.sh
+  pyclient:
+      image: python:latest
+      volumes: 
+        - ./client.py:/client.py
+      command: sh -c 'pip install keycloak-client; python client.py'
   webservice:
       image: node
       ports:
