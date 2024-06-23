@@ -12,12 +12,11 @@ services:
         - ./dirsrv_init.sh:/dirsrv_init.sh
       profiles: [ldap]
   pyclient:
-      image: python:latest
+      image: keyclock_pyclient
+      build: ./pyclient/
       volumes: 
-        - ./client.py:/client.py
+        - ./pyclient/client.py:/client.py
       command: sh -c 'pip install keycloak-client; python client.py'
-      stdin_open: true
-      tty: true
       profiles: [python, clients]
   webservice:
       image: node
